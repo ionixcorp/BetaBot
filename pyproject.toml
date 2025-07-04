@@ -1,0 +1,39 @@
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+# Excluir carpetas o archivos no relevantes
+exclude = [
+    "tests/",          # Ignora carpeta de pruebas
+    "__pycache__/",    # Ignora caché de Python
+    "scripts/",        # Ignora scripts auxiliares
+]
+
+[tool.ruff.lint]
+select = [
+    "F",     # Errores de pyflakes
+    "ARG",   # Parámetros no usados
+    "B",     # Antipatrones sutiles
+    "PL",    # Reglas avanzadas de Pylint
+    "TRY",   # Manejo robusto de excepciones
+    "ASYNC", # Código asíncrono
+    "RUF",   # Reglas de Ruff específicas
+    "I",     # Orden de imports
+]
+ignore = [
+    "E501",  # Líneas largas
+    "E701",  # Múltiples declaraciones por línea
+    "E731",  # Uso de lambdas
+    "C901",  # Demasiadas ramas
+    "TRY300", # ❌ Sugerencia innecesaria sobre usar else en bucles
+    "PLR1730", # Evitar sugerencia de usar Max/min
+    "PLR0911",
+    "PLR0912",
+    "PLR0913",
+    "PLR0915",
+    "PLR2004",
+    "PLR5501",
+    "TRY003",
+]
+[tool.ruff.lint.pylint]
+max-args = 8

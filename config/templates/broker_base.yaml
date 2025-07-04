@@ -1,0 +1,30 @@
+# Template base para brokers
+template_type: broker
+broker_settings:
+  enabled: true
+  execution_modes: []
+  
+auth:
+  account_type: PRACTICE
+  session_timeout_minutes: 30
+  auto_relogin: true
+
+connection:
+  api:
+    timeout_seconds: 30
+    max_reconnection_attempts: 5
+    reconnection_delay_seconds: 3
+  
+  rate_limits:
+    requests_per_second: 5
+    burst_limit: 20
+    backoff_multiplier: 2.0
+
+active_symbols:
+  forex:
+    enabled: true
+    active_assets: []
+  
+  crypto:
+    enabled: false
+    active_assets: []

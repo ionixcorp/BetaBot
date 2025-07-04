@@ -1,0 +1,18 @@
+# Template base para índices sintéticos
+template_type: synthetic
+prediction_force:
+  general:
+    description: "Estrategia de prediccion para índices sintéticos"
+    author: "BetaBot Team"
+    risk_level: "low"
+  
+  asset_config:
+    digits: 2
+    tolerance: 0.0002
+    truncate: false
+    expiration: 1
+    timeframe_base: 1
+  
+  strategy_params:
+    enabled: true
+    # Parámetros específicos para synthetic
