@@ -1,0 +1,90 @@
+broker_settings:
+  enabled: true
+  broker_name: "DERIV"
+  execution_modes: # Modos de mercado disponibles en el broker
+    - binary_options
+    - forex_traditional
+
+strategy_settings:
+  binary_options:
+    enabled: true
+    active_strategies:
+      - prediction_force  # Estrategia activa para binary options 
+  forex_traditional:
+    enabled: true
+    active_strategies:
+      - prediction_force  # Estrategia activa para forex tradicional
+
+auth:
+  api_token: "${DERIV_API_TOKEN}"
+  account_type: "REAL"  # "REAL" o "PRACTICE"
+
+connection:
+  api:
+    timeout_seconds: 30
+    max_reconnection_attempts: 5
+    reconnection_delay_seconds: 3
+
+  rate_limits:
+    requests_per_second: 5
+    burst_limit: 20
+    backoff_multiplier: 2.0
+
+active_symbols:
+  binary_options:
+    syntetic:
+      enabled: true
+      active_assets:
+        - "R_100"
+        - "R_75"
+        - "R_50"
+
+  forex_traditional:
+    enabled: true
+    active_assets:
+      - "EURUSD"
+      - "GBPUSD"
+
+tick_normalizer:
+  data_quality:
+    min_quality_score: 0.9
+    max_spread_percentage: 1.5
+    duplicate_detection: true
+    duplicate_window_seconds: 2.0
+
+  latency_compensation:
+    enabled: true
+    method: "adaptive"
+    fixed_latency_ms: 120.0
+    min_latency_ms: 40.0
+    max_latency_ms: 600.0
+    confidence_threshold: 0.8
+    measurement_window_size: 60
+
+  validation:
+    price_positive: true
+    volume_non_negative: true
+    spread_validation: true
+    timestamp_validation: true
+    sequence_validation: true
+
+  anomaly_detection:
+    enabled: true
+    price_sigma_threshold: 2.0
+    volume_sigma_threshold: 1.5
+    window_size: 25
+    min_samples: 4
+
+  performance:
+    buffer_size: 7000
+    batch_size: 40
+    max_latency_ms: 400
+    processing_threads: 2
+    queue_max_size: 3000
+
+  logging:
+    log_level: "INFO"
+    log_raw_data: true
+    log_normalized_ticks: true
+    log_validation_details: true
+    log_latency_measurements: true

@@ -1,14 +1,19 @@
 broker_settings:
   enabled: true
   broker_name: "IQOPTION"
-  broker_type: binary_options
-  execution_modes:
+  execution_modes: # Modos de mercado disponibles en el broker
     - binary_options
 
+strategy_settings:
+  binary_options:
+    enabled: true
+    active_strategies:
+      - prediction_force  # Estrategia activa para binary options 
+
 auth:
-  username: "${IQOPTION_USERNAME}"
+  email: "${IQOPTION_EMAIL}"
   password: "${IQOPTION_PASSWORD}"
-  account_type: PRACTICE  # PRACTICE | REAL
+  account_type: "PRACTICE"  # "PRACTICE" o "REAL"
   session_timeout_minutes: 30
   auto_relogin: true
 
@@ -17,20 +22,63 @@ connection:
     timeout_seconds: 30
     max_reconnection_attempts: 5
     reconnection_delay_seconds: 3
-    
+
   rate_limits:
     requests_per_second: 5
     burst_limit: 20
     backoff_multiplier: 2.0
 
 active_symbols:
-  forex:
+  binary_options:
+    forex:
+      enabled: true
+      active_assets:
+        - "EURUSD"
+        - "GBPUSD"
+    otc:
+      enabled: true
+      active_assets:
+        - "EURUSD-OTC"
+        - "GBPUSD-OTC"
+
+tick_normalizer:
+  data_quality:
+    min_quality_score: 0.8
+    duplicate_detection: true
+    duplicate_window_seconds: 2.0
+
+  latency_compensation:
     enabled: true
-    active_assets:
-      - EURUSD
-      - GBPUSD
-  otc:
+    method: "adaptive"  # Podría ser "fixed" u otros
+    fixed_latency_ms: 150.0
+    min_latency_ms: 50.0
+    max_latency_ms: 800.0
+    confidence_threshold: 0.7
+    measurement_window_size: 50
+
+  validation:
+    price_positive: true
+    volume_non_negative: true
+    timestamp_validation: true
+    sequence_validation: true
+
+  anomaly_detection:
     enabled: true
-    active_assets:
-      - "EURUSD-OTC"
-      - "GBPUSD-OTC"
+    price_sigma_threshold: 2.5
+    volume_sigma_threshold: 2.0
+    window_size: 30
+    min_samples: 5
+
+  performance:
+    buffer_size: 5000
+    batch_size: 50
+    max_latency_ms: 500
+    processing_threads: 1
+    queue_max_size: 2000
+
+  logging:
+    log_level: "DEBUG"
+    log_raw_data: true
+    log_normalized_ticks: true
+    log_validation_details: true
+    log_latency_measurements: true
