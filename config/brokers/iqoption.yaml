@@ -1,0 +1,36 @@
+broker_settings:
+  enabled: true
+  broker_name: "IQOPTION"
+  broker_type: binary_options
+  execution_modes:
+    - binary_options
+
+auth:
+  username: "${IQOPTION_USERNAME}"
+  password: "${IQOPTION_PASSWORD}"
+  account_type: PRACTICE  # PRACTICE | REAL
+  session_timeout_minutes: 30
+  auto_relogin: true
+
+connection:
+  api:
+    timeout_seconds: 30
+    max_reconnection_attempts: 5
+    reconnection_delay_seconds: 3
+    
+  rate_limits:
+    requests_per_second: 5
+    burst_limit: 20
+    backoff_multiplier: 2.0
+
+active_symbols:
+  forex:
+    enabled: true
+    active_assets:
+      - EURUSD
+      - GBPUSD
+  otc:
+    enabled: true
+    active_assets:
+      - "EURUSD-OTC"
+      - "GBPUSD-OTC"
