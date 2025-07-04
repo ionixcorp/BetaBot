@@ -1,0 +1,16 @@
+prediction_force:
+  general:
+    description: "Estrategia de prediccion para opciones binarias"
+    author: "BetaBot Team"
+    symbol: R_10
+    risk_level: "low"
+
+  asset_config:
+    digits: 2
+    tolerance: 0.0002
+    truncate: false
+    expiration: 1  # Expiración en minutos para synthetic
+    timeframe_base: 1 # Tiempo base para análisis expresado en minutos
+
+  strategy_params:
+    (Configuracion de parametros de la estrategia)  # Configuración de análisis y métricas

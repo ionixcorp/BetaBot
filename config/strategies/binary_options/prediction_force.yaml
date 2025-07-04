@@ -1,0 +1,26 @@
+# Configuración de la Estrategia Prediction Force para Binary Options
+# Estrategia avanzada para binary options basada en análisis multifractal
+
+strategy:
+  name: "prediction_force"
+  type: "binary_options"
+  version: "2.0.0"
+  enabled: true
+  
+  # Configuración general
+  general:
+    description: "Estrategia avanzada de trading para binary options basada en análisis multifractal"
+    author: "BetaBot Team"
+    risk_level: "medium"
+    min_capital: 1
+    max_capital: 10000
+
+  # Configuración de timeframes y expiraciones
+  timeframe_base: "60" # Tiempo base para análisis expresado en segundos
+  expiration_base: "60" # Expiración base para operaciones expresado en segundos
+
+  strategy_parameters:
+    enabled: true
+    # Aquí agregar configuracion de analsis
+    # Otros parametros, pesos, scorers, etc de la estrategia pueden ser añadidos aquí
+    

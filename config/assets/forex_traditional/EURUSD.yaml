@@ -1,0 +1,15 @@
+prediction_force:
+  general:
+    description: "Estrategia de prediccion para forex tradicional"
+    author: "BetaBot Team"
+    symbol: EURUSD
+    risk_level: "medium"
+
+  asset_config:
+    digits: 5
+    tolerance: 0.0002
+    truncate: false
+    timeframe_base: 5 # Tiempo base para análisis expresado en minutos
+
+  strategy_params:
+    (Configuracion de parametros de la estrategia)  # Configuración de análisis y métricas
