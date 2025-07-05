@@ -1,0 +1,24 @@
+metrics:
+  volume_profile:
+    description: "Configuración para métricas de perfil de volumen"
+    poc_static:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    poc_dynamic:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    volume_profile_map:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    value_area_range:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    high_volume_nodes:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    low_volume_nodes:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    composite_profile:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)

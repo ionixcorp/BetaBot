@@ -1,0 +1,39 @@
+metrics:
+  advance_micrometrics:
+    description: "Configuración para micrométricos avanzados"
+    micro_rsi:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_macd:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_momentum_score:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_reversal_score:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    tick_entropy:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    tick_cluster_density:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_zones_concentration:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_sr_bias:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_close_position:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_pattern_score:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_movement_sequences:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    micro_cluster_intensity:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)

@@ -1,0 +1,171 @@
+# IMPORTANTE: Si se activan las correlaciones, deriv es el unico broker que se usará
+# para realizar las suscripciones a los activos correlacionados.
+# Se debe agregar el prefijo "frx" a todos los activos forex para realizar
+# las suscripciones de correlaciones en Deriv.
+# IMPORTANTE: Validar si "use_correlations" esta habilitado en la configuracion del broker.
+# Solo suscribir a los activos necesarios si este analisis esta habilitado.
+# Si un broker diferente a deriv usa correlaciones, debe obtener el analisis de las
+# correlaciones de deriv y aplicar la lógica de trading correspondiente en su broker.
+
+correlations_config:
+
+  FOREX:
+    EURUSD:
+      - GBPUSD
+      - EURCAD
+      - USDCHF
+      - EURCHF
+
+    GBPUSD:
+      - EURUSD
+      - GBPJPY
+      - GBPAUD
+      - GBPCAD
+
+    USDJPY:
+      - EURJPY
+      - GBPJPY
+      - CADJPY
+      - AUDJPY
+
+    AUDUSD:
+      - NZDUSD
+      - AUDCAD
+      - AUDNZD
+      - AUDCHF
+
+    USDCAD:
+      - OILUSD
+      - CADJPY
+      - EURCAD
+      - AUDCAD
+
+    NZDUSD:
+      - AUDUSD
+      - NZDCAD
+      - NZDJPY
+      - NZDCHF
+
+    USDCHF:
+      - EURUSD
+      - EURCHF
+      - GBPCHF
+
+  SINTETICOS:  # Basados en derivados de volatilidad (ej. Deriv.com)
+    R_10:
+      - R_25
+      - R_50
+
+    R_25:
+      - R_10
+      - R_50
+      - R_75
+
+    R_50:
+      - R_25
+      - R_75
+      - R_100
+
+    R_75:
+      - R_50
+      - R_100
+      - R_150
+
+    R_100:
+      - R_50
+      - R_75
+      - R_150
+
+  CRIPTOMONEDAS:
+    BTCUSD:
+      - ETHUSD
+      - LTCUSD
+      - BCHUSD
+      - XMRUSD
+
+    ETHUSD:
+      - BTCUSD
+      - ADAUSD
+      - SOLUSD
+      - AVAXUSD
+
+    LTCUSD:
+      - BTCUSD
+      - BCHUSD
+      - DASHUSD
+
+    XRPUSD:
+      - XLMUSD
+      - ADAUSD
+      - TRXUSD
+
+  METALES:
+    XAUUSD:  # Oro
+      - XAGUSD
+      - USDCHF
+      - USDCAD
+
+    XAGUSD:  # Plata
+      - XAUUSD
+      - COPPER
+      - PLATINUM
+
+    PLATINUM:
+      - XAGUSD
+      - XAUUSD
+      - PALLADIUM
+
+    PALLADIUM:
+      - PLATINUM
+      - XAGUSD
+
+  COMMODITIES:
+    OILUSD:
+      - USDCAD
+      - NATGAS
+      - BRENT
+
+    NATGAS:
+      - OILUSD
+      - BRENT
+
+    BRENT:
+      - OILUSD
+      - NATGAS
+      - USDCAD
+
+    CORN:
+      - WHEAT
+      - SOYBEAN
+
+    WHEAT:
+      - CORN
+      - SOYBEAN
+
+    SOYBEAN:
+      - WHEAT
+      - CORN
+
+  INDICES:
+    SPX500:
+      - NAS100
+      - DJI30
+      - VIX
+      - GER40
+
+    NAS100:
+      - SPX500
+      - DJI30
+
+    DJI30:
+      - SPX500
+      - NAS100
+
+    GER40:
+      - FRA40
+      - UK100
+      - SPX500
+
+    VIX:
+      - SPX500
+      - NAS100  # Inversamente

@@ -1,0 +1,318 @@
+# File: config/strategies/forex_traditional/prediction_force.yaml
+# Este archivo configura la estrategia "Prediction Force" adaptada al mercado Forex tradicional.
+# Incluye análisis multifractal, gestión de riesgo y parámetros específicos para Forex.
+# Esta configuracion se utiliza como fallback en caso de que un activo no tenga
+# una configuracion especifica o tenga parametros mal configurados para la estrategia de Forex tradicional.
+# Se recomienda ajustar los parámetros según el activo específico y las condiciones del mercado.
+
+strategy:
+  name: "prediction_force"
+  market: "forex"
+  version: "2.0.0"
+  enabled: true
+
+  general:
+    description: "Estrategia Prediction Force adaptada al mercado Forex tradicional con gestión de SL/TP"
+    author: "BetaBot Team"
+    risk_level: "medium"
+
+  timeframe_base: 300     # 5 minutos
+  pip_scale: 0.0001       # Escala típica para la mayoría de los pares (se puede ajustar por activo)
+  spread_limit: 2.0       # Máximo spread aceptado (en pips)
+
+  strategy_parameters:
+    enabled: true
+    analysis:
+      dominance_threshold: 75
+      strong_dominance_threshold: 85
+      ratio_threshold: 65
+      confidence_reduction: 25
+      confidence_boost: 10
+      volume_confirmation_threshold: 70
+      volume_contradiction_threshold: 75
+      use_volume_analysis: true
+      tick_velocity_threshold:
+        forex: 2.5
+      poc_distance_factor: 2.0
+      required_conditions: 4
+      lookback_candles:
+        forex: 20
+      min_probability: 35
+      use_poc: true
+      use_value_area: true
+      min_ticks_volume: 25
+      advanced_volume_analysis: true
+
+      metrics_thresholds:
+        poc_min_volume: 5
+        value_area_default_percentage: 0.65
+        tick_processing_frequency: 3
+
+    # Análisis de múltiples timeframes para Forex
+    multi_timeframe_analysis:
+      enabled: true
+      layers:
+        intrabar:
+          timeframe: 1m
+          expiration: 10m
+          lookback_candles: 20
+          metrics_profile: "micro"
+          confidence_threshold: 78
+          max_duration_seconds: 300
+          allow_overlap: false
+        short_term:
+          timeframe: 30m
+          expiration: 2h
+          lookback_candles: 40
+          metrics_profile: "volume_trend"
+          confidence_threshold: 82
+        mid_term:
+          timeframe: 1h
+          expiration: 4h
+          lookback_candles: 60
+          metrics_profile: "macro_structure"
+          confidence_threshold: 88
+        long_term:
+          timeframe: 4h
+          expiration: 1d
+          lookback_candles: 100
+          metrics_profile: "macro_trend_strength"
+          confidence_threshold: 92
+
+    # El análisis fractal aquí es más conservador y busca confirmar señales sostenidas
+    # Útil para evitar entrar en retrocesos o zonas de rango inestables
+
+    multifractal_analysis:
+      enabled: true
+      base_timeframe: 60  # Centrado en operativa 1h o más
+      sub_timeframes: [15, 30, 45, 60]
+      consensus_threshold: 70
+      follow_trend: true               # Se privilegian entradas con la tendencia mayor
+      extended_lookback: true          # Se analiza un rango amplio de velas anteriores
+      trend_window: 48
+      trend_threshold: 75
+      min_confidence: 80
+      probability_boost: 10            # En caso de alineación fractal, boost significativo
+
+    candle_patterns:
+      enabled: true
+      lookback: 15
+      doji_threshold: 0.18
+      strong_trend_threshold: 0.85
+      pinbar_body_ratio: 0.25
+      pinbar_shadow_ratio: 0.55
+      engulfing_min_body_ratio: 0.75
+
+    support_resistance_analysis:
+      enabled: true
+      lookback_candles: 10
+
+    confidence_adjustment_factors:
+      price_action_patterns:
+        doji: -10
+        pinbar: 8
+        engulfing: 12
+        inside_bar: -4
+        outside_bar: 6
+
+      support_resistance_status:
+        consolidating_at_poc: -8
+        rejection_near_poc: 20
+        breaking_level: 15
+        stagnation_or_range: -6
+
+      volume_confirm_boost_high: 7
+      volume_confirm_boost_medium: 5
+      volume_breakout_boost: 12
+      volume_indecision_boost: 8
+      rejection_volume_boost: 10
+
+      volume_contradict_penalty_high: 12
+      volume_contradict_penalty_medium: 8
+
+      momentum_strength_multiplier: 10
+      breakout_strength_multiplier: 12
+      rejection_strength_multiplier: 10
+
+      max_confidence_high_vol: 90
+      max_confidence_breakout: 92
+      max_confidence_rejection: 85
+      max_confidence_indecision: 75
+
+      min_confidence_high_vol_contradict: 55
+      min_confidence_medium_vol_contradict: 50
+
+    # NUEVA SECCIÓN ESPECÍFICA PARA FOREX
+    trade:
+      amount_type: fixed       # Si se usa "fixed" se usa  fixed_amount, si es "percentage" se usa percentage   
+      fixed_amount: 100.0      # Monto fijo por operación
+      percentage: 0.02         # Porcentaje del capital disponible
+      max_trade_amount: 1000.0 # Monto máximo por operación si se usa "fixed" o "percentage"
+
+      stop_loss:
+        enabled: true
+        type: fixed                # fixed | atr_based | dynamic
+        value_pips: 20             # SL fijo en pips
+        trailing:
+          enabled: true
+          start_pips: 15
+          step_pips: 5
+          max_distance_pips: 50
+
+      take_profit:
+        enabled: true
+        type: fixed                # fixed | rr_ratio | dynamic
+        value_pips: 40             # TP fijo en pips
+        rr_ratio: 2.0              # Si es rr_ratio, se ignora value_pips
+
+      cooldown_seconds: 900        # 15 minutos
+      position_scaling:
+        enabled: true
+        confidence_tiers:          # Escala de confianza para ajustar el tamaño de la posición
+          - threshold: 75
+            multiplier: 25        # Multiplicador expresado en porcentaje sobre el monto base
+          - threshold: 80
+            multiplier: 50
+          - threshold: 85
+            multiplier: 75
+          - threshold: 90
+            multiplier: 100
+        max_amount: 2000.0         # Monto máximo por operación si se usa position_scaling
+        # El monto maximo no debe superar el 50% del capital disponible
+
+    default_probability_thresholds:
+      default: 80
+      forex:
+        normal: 82
+        volatile: 85
+
+    # Correlaciones globales
+    use_correlations:
+      forex: true
+    
+    # Configuración de retención de datos global
+    global_live_candle:
+      enabled: true
+      window_size: 120  # 2 horas para contexto extendido
+      metrics_analysis:
+        - micro_rsi
+        - micro_macd
+        - micro_momentum_score
+        - micro_reversal_score
+        - tick_entropy
+        - tick_cluster_density
+        - micro_zones_concentration
+        - micro_sr_bias
+        - micro_close_position
+        - micro_pattern_score
+        - micro_movement_sequences
+        - micro_cluster_intensity
+        - velocity_avg
+        - acceleration_avg
+        - jerk
+        - tick_frequency
+        - direction_changes
+        - max_consecutive_direction
+        - net_direction_score
+        - micro_volatility_spikes
+        - streak_volatility
+        - tick_pressure
+        - momentum_score_combined
+        - wap
+        - price_range
+        - price_std
+        - price_skewness
+        - kurtosis
+        - price_entropy
+        - price_mode_count
+        - candle_displacement
+        - tick_count
+        - volume_total
+        - volume_directional
+        - volume_delta
+        - tick_volume_std
+        - tick_volume_burst
+        - poc_intravela
+        - value_area
+        - vertical_volume
+        - volume_distribution
+        - volume_dominance
+        - volume_nodes
+        - lvn_nodes
+        - liquidity_zone_proximity
+        - poc_static
+        - poc_dynamic
+        - volume_profile_map
+        - value_area_range
+        - high_volume_nodes
+        - low_volume_nodes
+        - composite_profile
+        - volume_skew
+        - volume_kurtosis
+        - volume_std
+        - volume_entropy
+        - volume_mode_count
+        - volume_spread_ratio
+
+    sliding_window_metrics:
+      enabled: true
+      window_size_seconds: 5
+      metrics_to_update:
+        - micro_rsi
+        - micro_macd
+        - micro_momentum_score
+        - micro_reversal_score
+        - tick_entropy
+        - tick_cluster_density
+        - micro_zones_concentration
+        - micro_sr_bias
+        - micro_close_position
+        - micro_pattern_score
+        - micro_movement_sequences
+        - micro_cluster_intensity
+        - velocity_avg
+        - acceleration_avg
+        - jerk
+        - tick_frequency
+        - direction_changes
+        - max_consecutive_direction
+        - net_direction_score
+        - micro_volatility_spikes
+        - streak_volatility
+        - tick_pressure
+        - momentum_score_combined
+        - wap
+        - price_range
+        - price_std
+        - price_skewness
+        - kurtosis
+        - price_entropy
+        - price_mode_count
+        - candle_displacement
+        - tick_count
+        - volume_total
+        - volume_directional
+        - volume_delta
+        - tick_volume_std
+        - tick_volume_burst
+        - poc_intravela
+        - value_area
+        - vertical_volume
+        - volume_distribution
+        - volume_dominance
+        - volume_nodes
+        - lvn_nodes
+        - liquidity_zone_proximity
+        - poc_static
+        - poc_dynamic
+        - volume_profile_map
+        - value_area_range
+        - high_volume_nodes
+        - low_volume_nodes
+        - composite_profile
+        - volume_skew
+        - volume_kurtosis
+        - volume_std
+        - volume_entropy
+        - volume_mode_count
+        - volume_spread_ratio

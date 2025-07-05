@@ -1,0 +1,21 @@
+metrics:
+  volume_stats:
+    description: "Configuración para métricas de volumen estadístico"
+    volume_skew:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    volume_kurtosis:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    volume_std:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    volume_entropy:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    volume_mode_count:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)
+    volume_spread_ratio:
+      enabled: true 
+      (Configuraciones específicas para esta métrica)

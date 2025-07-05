@@ -1,16 +1,152 @@
+# File: config/strategies/binary_options/R_10.yaml
+# Configuración específica para el activo sintético R_10 (Range Break 10 Index) en Deriv
+# Sobrescribe parámetros globales para adaptarse a la baja volatilidad y comportamiento de rango con rupturas
+
 prediction_force:
   general:
-    description: "Estrategia de prediccion para opciones binarias"
+    description: "Estrategia optimizada para opciones binarias en R_10, un índice sintético de rango con volatilidad constante del 10% y rupturas cada 10 impactos en promedio"
     author: "BetaBot Team"
     symbol: R_10
-    risk_level: "low"
+    risk_level: "low"  # Baja volatilidad, pero rupturas impredecibles
 
   asset_config:
-    digits: 2
-    tolerance: 0.0002
-    truncate: false
-    expiration: 1  # Expiración en minutos para synthetic
-    timeframe_base: 1 # Tiempo base para análisis expresado en minutos
+    digits: 2           # 2 dígitos para índices sintéticos en Deriv
+    tolerance: 0.01     # Tolerancia ajustada para movimientos pequeños
+    truncate: false     # Sin truncar para precisión
 
-  strategy_params:
-    (Configuracion de parametros de la estrategia)  # Configuración de análisis y métricas
+  strategy_parameters:
+    enabled: true
+    timeframe_base: 15        # 15 segundos para capturar movimientos en rango
+    expiration_base: 15       # Expiración alineada para operaciones rápidas
+
+    analysis:
+      dominance_threshold: 80          # Más bajo por baja volatilidad
+      strong_dominance_threshold: 85   # Umbral para señales fuertes
+      ratio_threshold: 65              # Más bajo para detectar patrones en rango
+      confidence_reduction: 25         # Menor reducción por estabilidad en rangos
+      confidence_boost: 5              # Boost moderado por confirmaciones
+      volume_confirmation_threshold: 70 # Umbral bajo por naturaleza sintética
+      volume_contradiction_threshold: 75 # Umbral para contradicciones
+      use_volume_analysis: false       # Desactivado por irrelevancia en sintéticos
+      tick_velocity_threshold:
+        synthetic: 2.0               # Más bajo para capturar movimientos pequeños
+      poc_distance_factor: 1.5        # Menor distancia al POC por rangos estrechos
+      required_conditions: 5          # Condiciones estándar para señales
+      min_probability: 20             # Probabilidad mínima estándar
+      use_poc: true                   # Habilitar análisis de POC
+      use_value_area: true            # Habilitar área de valor
+      min_ticks_volume: 10           # Menos ticks por baja volatilidad
+      advanced_volume_analysis: false # Desactivado por irrelevancia
+      metrics_thresholds:
+        poc_min_volume: 2            # Volumen mínimo bajo para POC
+        value_area_default_percentage: 0.65 # Área de valor más estrecha
+        tick_processing_frequency: 2  # Alta frecuencia para movimientos rápidos
+
+    multifractal_analysis:
+      enabled: false                 # Desactivado por simplicidad del R_10
+      base_timeframe: 1             # 1 minuto si se habilitara
+      sub_timeframes: [1]           # Solo timeframe más corto
+      consensus_threshold: 60       # Umbral bajo si se usara
+      follow_trend: false           # Tendencias menos relevantes en rangos
+      extended_lookback: false      # Sin ventana extendida
+      trend_window: 10             # Ventana corta si se usara
+      trend_threshold: 70          # Umbral bajo si se usara
+      min_confidence: 70           # Confianza mínima baja
+      probability_boost: 3         # Boost bajo
+
+    candle_patterns:
+      enabled: true
+      lookback: 6                   # Menor lookback por movimientos rápidos
+      doji_threshold: 0.35          # Muy estricto para detectar dojis
+      strong_trend_threshold: 0.85  # Umbral bajo para rangos
+      pinbar_body_ratio: 0.1        # Muy estricto para pinbars
+      pinbar_shadow_ratio: 0.75     # Sombras más largas por volatilidad baja
+      engulfing_min_body_ratio: 0.95 # Muy estricto para engulfing
+
+    support_resistance_analysis:
+      enabled: true
+      lookback_candles: 6           # Menor lookback por rangos estrechos
+
+    confidence_adjustment_factors:
+      price_action_patterns:
+        doji: -15                  # Penalización moderada por doji
+        pinbar: 3                  # Boost bajo por pinbars
+        engulfing: 5               # Boost bajo por engulfing
+        inside_bar: -10            # Penalización por inside bars
+        outside_bar: 3             # Boost bajo por outside bars
+      support_resistance_status:
+        consolidating_at_poc: -10  # Penalización por consolidación
+        rejection_near_poc: 10     # Boost por rechazos en límites
+        breaking_level: 15         # Mayor boost por rupturas
+        stagnation_or_range: -5    # Penalización leve por rangos
+      volume_confirm_boost_high: 2   # Bajo boost por irrelevancia de volumen
+      volume_confirm_boost_medium: 1
+      volume_breakout_boost: 8
+      volume_indecision_boost: 3
+      rejection_volume_boost: 3
+      volume_contradict_penalty_high: 10
+      volume_contradict_penalty_medium: 8
+      momentum_strength_multiplier: 8
+      breakout_strength_multiplier: 12
+      rejection_strength_multiplier: 10
+      max_confidence_high_vol: 75
+      max_confidence_breakout: 80
+      max_confidence_rejection: 75
+      max_confidence_indecision: 65
+      min_confidence_high_vol_contradict: 45
+      min_confidence_medium_vol_contradict: 45
+
+    trade:
+      amount: 2.0                  # Monto bajo por baja volatilidad
+      cooldown_seconds: 120        # 2 minutos, más corto por movimientos frecuentes
+      position_scaling:
+        enabled: true
+        confidence_tiers:
+          - threshold: 60
+            multiplier: 0.5        # Muy conservador
+          - threshold: 70
+            multiplier: 1.0
+          - threshold: 80
+            multiplier: 1.5
+          - threshold: 85
+            multiplier: 2.0
+          - threshold: 90
+            multiplier: 2.5
+        max_amount: 50.0         # Límite máximo bajo por riesgo
+
+    default_probability_thresholds:
+      synthetic:
+        low_volatility: 80       # Ajustado para R_10 (10% volatilidad)
+        medium_volatility: 82
+        high_volatility: 85
+
+    use_correlations:
+      synthetic: false           # Desactivado por naturaleza sintética
+
+    global_live_candle:
+      enabled: true
+      window_size: 15           # 15 minutos, corto para rangos
+      metrics_analysis:
+        - micro_rsi
+        - micro_momentum_score
+        - tick_entropy
+        - tick_cluster_density
+        - net_direction_score
+        - candle_displacement
+        - tick_frequency
+        - price_std
+
+    sliding_window_metrics:
+      enabled: true
+      window_size_seconds: 2  # Ventana muy corta para rango de baja volatilidad
+      metrics_to_update:
+        - tick_velocity
+        - tick_frequency
+        - direction_changes
+        - net_direction_score
+        - micro_reversal_score
+        - micro_pattern_score
+        - price_std
+        - tick_entropy
+        - tick_cluster_density
+        - momentum_score_combined

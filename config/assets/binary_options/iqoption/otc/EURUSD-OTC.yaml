@@ -1,16 +1,155 @@
+# File: config/strategies/binary_options/EURUSD-OTC.yaml
+# Configuración específica para el activo EURUSD-OTC en IQ Option con la estrategia Prediction Force
+# Sobrescribe parámetros globales para adaptarse a la alta volatilidad y baja liquidez del mercado OTC
+
 prediction_force:
   general:
-    description: "Estrategia de prediccion para opciones binarias"
+    description: "Estrategia optimizada para opciones binarias en EURUSD-OTC en IQ Option, considerando alta volatilidad y baja liquidez en fines de semana"
     author: "BetaBot Team"
     symbol: EURUSD-OTC
-    risk_level: "medium"
+    risk_level: "high"  # Refleja alta volatilidad del mercado OTC
 
   asset_config:
-    digits: 5
-    tolerance: 0.0002
-    truncate: false
-    expiration: 1  # Expiración en minutos para IQOption
-    timeframe_base: 1 # Tiempo base para análisis expresado en minutos
+    digits: 5           # 5 dígitos para precisión en cotizaciones
+    tolerance: 0.0002   # Tolerancia ajustada para movimientos volátiles
+    truncate: false     # Sin truncar para mantener precisión
 
-  strategy_params:
-    (Configuracion de parametros de la estrategia)  # Configuración de análisis y métricas
+  strategy_parameters:
+    enabled: true
+    timeframe_base: 60        # 1 minuto, adecuado para operaciones rápidas en OTC
+    expiration_base: 60       # Expiración de 1 minuto, común en OTC
+
+    analysis:
+      dominance_threshold: 88          # Muy estricto por volatilidad
+      strong_dominance_threshold: 92   # Umbral para señales muy fuertes
+      ratio_threshold: 78              # Ratio alcista/bajista más estricto
+      confidence_reduction: 40         # Mayor reducción por posibles contradicciones
+      confidence_boost: 5              # Boost moderado por menor fiabilidad
+      volume_confirmation_threshold: 85 # Umbral alto por baja liquidez
+      volume_contradiction_threshold: 88 # Umbral para contradicciones
+      use_volume_analysis: false       # Desactivado por baja liquidez en OTC
+      tick_velocity_threshold:
+        otc: 2.5                     # Más bajo para capturar movimientos rápidos
+      poc_distance_factor: 2.0        # Menor distancia al POC por volatilidad
+      required_conditions: 7          # Más condiciones para señales robustas
+      min_probability: 30             # Probabilidad mínima más alta por riesgo
+      use_poc: true                   # Habilitar análisis de POC
+      use_value_area: true            # Habilitar área de valor
+      min_ticks_volume: 15           # Menos ticks por baja liquidez
+      advanced_volume_analysis: false # Desactivado por irrelevancia en OTC
+      metrics_thresholds:
+        poc_min_volume: 3            # Volumen mínimo para POC
+        value_area_default_percentage: 0.7 # Área de valor estándar
+        tick_processing_frequency: 3  # Alta frecuencia para movimientos rápidos
+
+    multifractal_analysis:
+      enabled: false                 # Desactivado por impredecibilidad en OTC
+      base_timeframe: 1             # 1 minuto si se habilitara
+      sub_timeframes: [1]           # Solo timeframe más corto
+      consensus_threshold: 75       # Umbral alto si se usara
+      follow_trend: false           # Tendencias menos fiables en OTC
+      extended_lookback: false      # Sin ventana extendida
+      trend_window: 15             # Ventana más corta si se usara
+      trend_threshold: 80          # Umbral alto si se usara
+      min_confidence: 80           # Confianza mínima alta
+      probability_boost: 5         # Boost moderado
+
+    candle_patterns:
+      enabled: true
+      lookback: 8                   # Menor lookback por movimientos rápidos
+      doji_threshold: 0.3           # Muy estricto para detectar dojis
+      strong_trend_threshold: 0.92  # Umbral alto para tendencias
+      pinbar_body_ratio: 0.1        # Muy estricto para pinbars
+      pinbar_shadow_ratio: 0.7      # Sombras más largas por volatilidad
+      engulfing_min_body_ratio: 0.9 # Muy estricto para engulfing
+
+    support_resistance_analysis:
+      enabled: true
+      lookback_candles: 8           # Menor lookback por inestabilidad de niveles
+
+    confidence_adjustment_factors:
+      price_action_patterns:
+        doji: -20                  # Fuerte penalización por doji en OTC
+        pinbar: 5                  # Boost moderado por pinbars
+        engulfing: 10              # Boost moderado por engulfing
+        inside_bar: -10            # Penalización por inside bars
+        outside_bar: 5             # Boost moderado por outside bars
+      support_resistance_status:
+        consolidating_at_poc: -15  # Fuerte penalización por consolidación
+        rejection_near_poc: 15     # Boost por rechazos
+        breaking_level: 10         # Boost por rupturas
+        stagnation_or_range: -10   # Penalización por rangos
+      volume_confirm_boost_high: 3   # Bajo boost por baja liquidez
+      volume_confirm_boost_medium: 2
+      volume_breakout_boost: 5
+      volume_indecision_boost: 5
+      rejection_volume_boost: 5
+      volume_contradict_penalty_high: 15
+      volume_contradict_penalty_medium: 12
+      momentum_strength_multiplier: 10
+      breakout_strength_multiplier: 8
+      rejection_strength_multiplier: 8
+      max_confidence_high_vol: 80
+      max_confidence_breakout: 85
+      max_confidence_rejection: 80
+      max_confidence_indecision: 70
+      min_confidence_high_vol_contradict: 50
+      min_confidence_medium_vol_contradict: 50
+
+    trade:
+      amount: 5.0                  # Monto bajo por alto riesgo
+      cooldown_seconds: 180        # 3 minutos, más corto por movimientos rápidos
+      position_scaling:
+        enabled: true
+        confidence_tiers:
+          - threshold: 70
+            multiplier: 0.5        # Más conservador
+          - threshold: 80
+            multiplier: 1.0
+          - threshold: 85
+            multiplier: 1.5
+          - threshold: 90
+            multiplier: 2.0
+          - threshold: 95
+            multiplier: 2.5
+        max_amount: 100.0        # Límite máximo muy bajo por riesgo
+
+    default_probability_thresholds:
+      otc:
+        normal: 88             # Muy alto por volatilidad
+        special: 90            # Más alto para condiciones extremas
+
+    use_correlations:
+      otc: false               # Desactivado por precios generados por el broker
+
+    global_live_candle:
+      enabled: true
+      window_size: 30          # 30 minutos, más corto por volatilidad
+      metrics_analysis:
+        - micro_rsi
+        - micro_momentum_score
+        - tick_entropy
+        - tick_cluster_density
+        - net_direction_score
+        - micro_volatility_spikes
+        - tick_frequency
+        - candle_displacement
+        - price_std
+        
+    sliding_window_metrics:
+      enabled: true
+      window_size_seconds: 3  # Ventana muy corta para alta volatilidad
+      metrics_to_update:
+        - tick_velocity
+        - tick_frequency
+        - direction_changes
+        - net_direction_score
+        - micro_reversal_score
+        - micro_volatility_spikes
+        - tick_pressure
+        - tick_entropy
+        - micro_pattern_score
+        - price_std
+        - tick_cluster_density
+        - micro_zones_concentration
+        - micro_rsi
